@@ -165,7 +165,8 @@ void app_main(void)
 	com_rslt += bmp280_set_work_mode(BMP280_ULTRA_LOW_POWER_MODE);
 	
 	
-	//penser à modif waittime dans cette fonction (p_bmp280->delay_msec(500); fuck v_waittime_u8)
+	/**penser à modif waittime dans cette fonction (p_bmp280->delay_msec(500); fuck v_waittime_u8)
+	attention la température est en second argument --passé 3h là dessus le 30/1 quand même...-- **/
 	com_rslt += bmp280_get_forced_uncomp_pressure_temperature(&v_data_uncomp_pres_s32, &v_data_uncomp_tem_s32); 
 
 	//ESP_LOGE(TAG_BMP280, "Dans main: v_data_uncomp_tem_s32 = %i", v_data_uncomp_tem_s32);
