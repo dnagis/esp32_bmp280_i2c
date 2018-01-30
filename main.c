@@ -3,22 +3,25 @@
  * 
  * Sur plaque de dev, VDD et GND et Clk sur SCL_PIN (voir les defines ici), Data (SDI) sur SDA_PIN
  * 
- * --> il faut ABSOLUMENT faire un MIX des deux ci dessous sinon ça passe pas...
+ * bmp280_get_forced_uncomp_pressure_temperature() dans bmp280.c --> p_bmp280->delay_msec(500); sinon il attend pas il lit 
+ * tout de suite et tu as toujours la même température... qui doit correspondre à un code d'erreur c'est chelou
+ * donc fuck bmp280_compute_wait_time(&v_waittime_u8); dans cette fonction
+ * 
+ * 
+ * 
+ * Pour avoir le code j'ai ABSOLUMENT dû faire un MIX des deux ci dessous:
  * https://github.com/BoschSensortec/BMP280_driver
  * 	|- bmp280.[c,h] doivent être à côté pour pouvoir compiler
  * https://github.com/yanbe/bme280-esp-idf-i2c/blob/master/main/main.c
  * 
  * 
- * Attention flash pas possible si le bmp280 a VDD et GND branché à celui de l'esp32, mais au runtime 
- * 	il faut qu'ils soient branchés sinon com marche pas... Donc débrancher le 3v3 de l'i2c bmp280 le temps du flash (peut 
+ * Flash parfois pas possible si le bmp280 a VDD et GND branché à celui de l'esp32, mais au runtime 
+ * 	il faut qu'ils soient branchés sinon com marche pas... Solution: débrancher le 3v3 de l'i2c bmp280 le temps du flash (peut 
  *  être qu'avec 18 & 19 il n'y a pas ce problème???)
  * 
- * interessant si tu n'arrives pas à savoir si tu es bien connecté en i2c:
+ * interessant pour savoir rapidement si tu es bien connecté en i2c:
  * 	 https://github.com/nkolban/esp32-snippets/blob/master/i2c/scanner/i2cscanner.c
  * 
- * 
- * ToDo -> je ne crois pas avoir la bonne température, je ne lance pas la séquence où tu lui écris dans la gueule, ou alors il faut reset?, 
- * 	la température a l'air d'être toujours la même, et pas cohérente...
  * 
  * 
  * 
@@ -148,27 +151,32 @@ s8 I2C_routine(void) {
 void app_main(void)
 {
 	s32 com_rslt = ERROR;
-	s32 v_data_uncomp_tem_s32, v_actual_temp_s32;
+	s32 v_data_uncomp_tem_s32, v_data_uncomp_pres_s32, v_actual_temp_s32;
 	
-	ESP_LOGI(TAG_BMP280, "Démarrage...");
+	
+	//ESP_LOGI(TAG_BMP280, "Démarrage...");
 	
 	i2c_master_init();
 	
 	I2C_routine();
 	
 	com_rslt = bmp280_init(&bmp280);
-	com_rslt += bmp280_set_power_mode(BMP280_NORMAL_MODE);
+	com_rslt += bmp280_set_power_mode(BMP280_FORCED_MODE);
 	com_rslt += bmp280_set_work_mode(BMP280_ULTRA_LOW_POWER_MODE);
-	com_rslt += bmp280_set_standby_durn(BMP280_STANDBY_TIME_1_MS);
 	
-	com_rslt += bmp280_read_uncomp_temperature(&v_data_uncomp_tem_s32);
+	
+	//penser à modif waittime dans cette fonction (p_bmp280->delay_msec(500); fuck v_waittime_u8)
+	com_rslt += bmp280_get_forced_uncomp_pressure_temperature(&v_data_uncomp_pres_s32, &v_data_uncomp_tem_s32); 
+
+	//ESP_LOGE(TAG_BMP280, "Dans main: v_data_uncomp_tem_s32 = %i", v_data_uncomp_tem_s32);
+	
 	v_actual_temp_s32 = bmp280_compensate_temperature_int32(v_data_uncomp_tem_s32);
 	
 	if (com_rslt != SUCCESS)
 		ESP_LOGE(TAG_BMP280, "erreur...code: %d", com_rslt);
 		
 	if (com_rslt == SUCCESS)
-		ESP_LOGI(TAG_BMP280, "%d degC", v_actual_temp_s32);
+		ESP_LOGI(TAG_BMP280, "%d DegC", v_actual_temp_s32);
 		
 	com_rslt += bmp280_set_power_mode(BMP280_SLEEP_MODE);
 	
