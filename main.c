@@ -1,4 +1,6 @@
 /**
+ * Mini modif pour essai push avant gros remaniement
+ * 
  * Lecture bmp280 via i2c sur l'esp32. 
  * 
  * Sur plaque de dev, VDD et GND et Clk sur SCL_PIN (voir les defines ici), Data (SDI) sur SDA_PIN
