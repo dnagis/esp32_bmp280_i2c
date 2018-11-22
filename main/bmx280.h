@@ -28,9 +28,9 @@
 
 #define OAP_BMX280_ENABLED 1
 #define OAP_BMX280_I2C_NUM 0
-#define OAP_BMX280_ADDRESS 0x77
-#define OAP_BMX280_I2C_SDA_PIN 18 //VVNX****** //15 et 2 marche aussi, MAIS avec 15 et 2 j'ai l'impression que flash bloque quand VDD branché...
-#define OAP_BMX280_I2C_SCL_PIN 19 //VVNX******
+#define OAP_BMX280_ADDRESS 0x77 //Alors là grosse erreur des gars de chez openair project ils avaient mis 76!!!
+#define OAP_BMX280_I2C_SDA_PIN 18 //VVNX****** 15 et 2 marche aussi, MAIS avec 15 et 2 j'ai l'impression que flash bloque quand VDD branché...
+#define OAP_BMX280_I2C_SCL_PIN 19 //VVNX****** Pas d'astuce particulière pour les numéros de pin...
 
 #define OAP_BMX280_ENABLED_AUX 0
 #define OAP_BMX280_I2C_NUM_AUX 0x77
