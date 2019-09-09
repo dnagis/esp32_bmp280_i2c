@@ -1,14 +1,14 @@
-# Lecture capteurs Bosch
+# Lecture capteurs Bosch (temp pression hum)
 
-bmp280 mais peut surement lire le bme280 aussi
-base = esp-idf/examples/get-started/hello_world
-et tout ce qui est bon et juteux vient de chez:
-https://github.com/openairproject/sensor-esp32
+bm[p,e]280 (attention selon le modèle il faut changer adresse register (0x77 ou 0x76) dans bmx280.h)  
+Basé sur esp-idf/examples/get-started/hello_world  
+et sur https://github.com/openairproject/sensor-esp32  
 
 PINS:
-* esp32		bmp280
-* 3v3			Vin
-* GND			GND
-* D18			SDI --> configuré dans bmx280.h
-* D19			SCK --> configuré dans bmx280.h
+esp32 | bmp280
+------------ | -------------
+3v3 | Vin
+GND | GND
+D18 | SDI --> configuré dans bmx280.h
+D19 | SCK --> configuré dans bmx280.h
 
