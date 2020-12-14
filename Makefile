@@ -4,6 +4,6 @@
 #
 
 PROJECT_NAME := bmx280_i2c
-
+EXTRA_COMPONENT_DIRS := /initrd/mnt/dev_save/esp/esp-idf/components_vincent/esp-idf-lib/components
 include $(IDF_PATH)/make/project.mk
 

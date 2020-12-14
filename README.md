@@ -1,15 +1,25 @@
-# Lecture capteurs Bosch (temp pression hum)
+# ESP32: Lecture capteurs Bosch bm[p,e]280 (temp pression hum)
 
-bm[p,e]280 (attention selon le modèle il faut changer adresse register (0x77 ou 0x76) dans bmx280.h)  
+2020: Nouvelle stratégie pour accéder en i2c:
+il faut installer la librairie esp-idf-lib : recette install dans mtox/exp32
 
-Basé sur esp-idf/examples/get-started/hello_world et sur https://github.com/openairproject/sensor-esp32  
+ 
+ 
+git clone https://github.com/UncleRus/esp-idf-lib dans un DIR et ajouter dans la Makefile:
+EXTRA_COMPONENT_DIRS := $DIR/esp-idf-lib/components
+
+
+ce code basé sur les exemples disponibles dans esp-idf-lib/components/bmp280
+
+n.b. ancienne technique est archivée dans ce repo avec les fichiers
+
+
 
 PINS:  
 esp32 | bmp280  
 
 3v3 | Vin  
 GND | GND  
-D18 | SDI   
-D19 | SCK  
+SDA | SDI   
+SCL | SCK  
 
-n°s des pins configuré dans bmx280.h 
